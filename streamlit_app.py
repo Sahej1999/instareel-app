@@ -1,6 +1,7 @@
 # InstaReel Booster - Streamlit Web App with AI Script, Style & Background Music
 
 import os
+os.environ["IMAGEIO_FFMPEG_EXE"] = os.path.abspath("ffmpeg.exe")
 import datetime
 import textwrap
 import random
