@@ -1,18 +1,19 @@
 # InstaReel Booster - Streamlit Web App with AI Script, Style & Background Music
 
 import os
-os.environ["IMAGEIO_FFMPEG_EXE"] = os.path.abspath("ffmpeg.exe")
 import datetime
 import textwrap
 import random
 import streamlit as st
+
+# Use local ffmpeg executable if available
+os.environ["IMAGEIO_FFMPEG_EXE"] = os.path.abspath("ffmpeg.exe")
 
 # Direct imports for MoviePy components to avoid `moviepy.editor` issues
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.VideoClip import TextClip
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.audio.io.AudioFileClip import AudioFileClip
-
 
 def ai_generate_script(topic):
     prompts = {
@@ -39,11 +40,9 @@ def ai_generate_script(topic):
     }
     return random.choice(prompts.get(topic, [f"This is a placeholder script about {topic}."]))
 
-
 def generate_script(topic, custom_script):
     script = custom_script.strip() if custom_script else ai_generate_script(topic)
     return textwrap.fill(script, width=70)
-
 
 def generate_hashtags(topic):
     base_tags = ["#reels", "#explore", f"#{topic}", "#viral", "#shorts"]
@@ -53,7 +52,6 @@ def generate_hashtags(topic):
         base_tags += ["#selfcare", "#mindfulness"]
     return base_tags
 
-
 def save_log(timestamp, topic, script, hashtags, filename="reel_log.csv"):
     try:
         log_entry = f"{timestamp},{topic},\"{script.replace(',', ';')}\",{','.join(hashtags)}"
@@ -61,7 +59,6 @@ def save_log(timestamp, topic, script, hashtags, filename="reel_log.csv"):
             file.write(log_entry + "\n")
     except Exception as e:
         st.error(f"Failed to write log file: {e}")
-
 
 def create_final_video(video_path, script_text, music_path, style):
     try:
@@ -76,9 +73,7 @@ def create_final_video(video_path, script_text, music_path, style):
 
         subtitle = TextClip(
             script_text,
-            fontsize=fontsize,
             color=font_color,
-            bg_color=bg_color,
             size=video.size,
             method='caption'
         )
@@ -95,7 +90,6 @@ def create_final_video(video_path, script_text, music_path, style):
     except Exception as e:
         st.error(str(e))
         return None
-
 
 def main():
     st.title("🎬 InstaReel Booster - Web App")
